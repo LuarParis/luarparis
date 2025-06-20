@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Catálogo | LUAR PARIS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Roboto&display=swap" rel="stylesheet">
+  <style>
+    body { margin: 0; font-family: 'Roboto', sans-serif; }
+    header {
+      background-image: url('portada.png');
+      background-size: cover;
+      background-position: center;
+      color: white;
+      text-align: center;
+      padding: 100px 20px;
+    }
+    nav { background: black; padding: 10px; display: flex; justify-content: center; gap: 20px; }
+    nav a { color: white; text-decoration: none; font-weight: bold; }
+    .catalogo { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; padding: 60px; }
+    .producto { text-align: center; }
+    .producto img { width: 100%; border-radius: 10px; }
+    .producto button { margin-top: 10px; padding: 10px 15px; background: #111; color: white; border: none; border-radius: 5px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>LUAR PARIS</h1>
+    <p>Estilo que no se olvida</p>
+  </header>
+
+  <nav>
+    <a href="index.html">Inicio</a>
+    <a href="productos.html">Productos</a>
+    <a href="diseñadora.html">Diseñadora</a>
+    <a href="catalogo.html">Catálogo</a>
+  </nav>
+
+  <div class="catalogo">
+    <div class="producto">
+      <img src="https://images.unsplash.com/photo-1603884706496-fbc8021be93f" alt="Vestido 3">
+      <p>Vestido Celeste Brillante - S/490</p>
+      <button>Añadir al carrito</button>
+    </div>
+    <div class="producto">
+      <img src="https://images.unsplash.com/photo-1622560487388-20766b1d7b89" alt="Vestido 4">
+      <p>Vestido Noche Plateado - S/580</p>
+      <button>Añadir al carrito</button>
+    </div>
+  </div>
+</body>
+</html>
