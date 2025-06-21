@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Contáctanos | LUAR PARIS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Roboto&display=swap" rel="stylesheet">
+  <style>
+    body { margin: 0; font-family: 'Roboto', sans-serif; }
+
+    header {
+      background-image: url('PORTADALUAR.png');
+      background-size: cover;
+      background-position: center;
+      color: white;
+      text-align: center;
+      padding: 100px 20px;
+    }
+
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 60px;
+      margin: 0;
+    }
+
+    nav {
+      background: black;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    section {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    form {
+      max-width: 500px;
+      margin: 0 auto 40px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      background-color: black;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+
+    iframe {
+      width: 100%;
+      max-width: 600px;
+      height: 300px;
+      border: 0;
+      border-radius: 12px;
+      margin: 20px auto;
+      display: block;
+    }
+
+    .mapa-boton a {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 20px;
+      background-color: #000;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 6px;
+    }
+
+    .comentarios {
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 600px;
+      margin: 30px auto;
+      text-align: left;
+    }
+
+    footer {
+      background: #111;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .whatsapp {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      background-color: #25D366;
+      padding: 10px 15px;
+      border-radius: 50px;
+      text-decoration: none;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      color: white;
+      font-family: sans-serif;
+      transition: background-color 0.3s;
+    }
+
+    .whatsapp:hover {
+      background-color: #1ebc59;
+    }
+
+    .whatsapp img {
+      width: 30px;
+      height: 30px;
+      margin-right: 10px;
+    }
+
+    .whatsapp span {
+      font-size: 16px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>LUAR PARIS</h1>
+    <p>"Estilo que no se olvida"</p>
+  </header>
+
+  <nav>
+    <a href="index.html">Inicio</a>
+    <a href="diseñadora.html">Diseñadora</a>
+    <a href="catalogo.html">Catálogo</a>
+    <a href="contactanos.html">Contáctanos</a>
+  </nav>
+
+  <section>
+    <h2>Contáctanos</h2>
+    <p>¿Tienes dudas, consultas o quieres un diseño personalizado? Escríbenos:</p>
+
+    <form>
+      <input type="text" placeholder="Tu nombre" required>
+      <input type="email" placeholder="Tu correo" required>
+      <textarea rows="5" placeholder="Tu mensaje" required></textarea>
+      <button type="submit">Enviar</button>
+    </form>
+
+    <h3>Ubicación</h3>
+    <p><strong>GAMA Moda Plaza, Agustín Gamarra, La Victoria, Lima</strong></p>
+
+    <iframe 
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3901.897602127987!2d-77.02010902504016!3d-12.069122988123205!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105c8d9f0c58c6b%3A0xe353e62e88b299c4!2sGAMA%20Moda%20Plaza!5e0!3m2!1ses-419!2spe!4v1719003501500!5m2!1ses-419!2spe" 
+      allowfullscreen 
+      loading="lazy" 
+      referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+
+    <div class="mapa-boton">
+      <a href="https://www.google.com/maps/place/GAMA+Moda+Plaza" target="_blank">Ver en Google Maps</a>
+    </div>
+
+    <h3>Lo que dicen nuestras clientas</h3>
+    <div class="comentarios">
+      <p><strong>Ana M.:</strong> “Los vestidos son elegantes y de excelente calidad. ¡Recomendadísimo!”</p>
+      <p><strong>Lucía T.:</strong> “Me encantó el trato personalizado y el diseño único.”</p>
+      <p><strong>Valeria G.:</strong> “Perfecto para mi evento, muchas gracias LUAR PARIS.”</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 LUAR PARIS</p>
+  </footer>
+
+  <!-- Botón flotante de WhatsApp -->
+  <a href="https://wa.me/51932463447" class="whatsapp" target="_blank">
+    <img src="https://cdn-icons-png.flaticon.com/512/124/124034.png" alt="WhatsApp">
+    <span>Chatea con nosotros</span>
+  </a>
+
+</body>
+</html>
