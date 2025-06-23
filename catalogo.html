@@ -21,6 +21,20 @@
     .producto { text-align: center; }
     .producto img { width: 100%; border-radius: 10px; }
     .producto button { margin-top: 10px; padding: 10px 15px; background: #111; color: white; border: none; border-radius: 5px; cursor: pointer; }
+
+    /* Estilos del carrito */
+    #carrito {
+      padding: 20px;
+      border-top: 2px solid #ccc;
+      background: #f9f9f9;
+      max-width: 600px;
+      margin: auto;
+      margin-bottom: 40px;
+    }
+    #carrito ul {
+      list-style: none;
+      padding: 0;
+    }
   </style>
 </head>
 <body>
@@ -40,13 +54,64 @@
     <div class="producto">
       <img src="https://images.unsplash.com/photo-1603884706496-fbc8021be93f" alt="Vestido 3">
       <p>Vestido Celeste Brillante - S/490</p>
-      <button>Añadir al carrito</button>
+      <button onclick="agregarAlCarrito('Vestido Celeste Brillante', 490)">Añadir al carrito</button>
     </div>
     <div class="producto">
       <img src="https://images.unsplash.com/photo-1622560487388-20766b1d7b89" alt="Vestido 4">
       <p>Vestido Noche Plateado - S/580</p>
-      <button>Añadir al carrito</button>
+      <button onclick="agregarAlCarrito('Vestido Noche Plateado', 580)">Añadir al carrito</button>
     </div>
   </div>
+
+  <!-- CARRITO -->
+  <div id="carrito">
+    <h3>🛒 Tu carrito:</h3>
+    <ul id="lista-carrito"></ul>
+    <p><strong>Total:</strong> S/<span id="total">0</span></p>
+    <button onclick="enviarPorWhatsApp()">Enviar pedido por WhatsApp</button>
+  </div>
+
+  <script>
+    const carrito = [];
+
+    function agregarAlCarrito(nombre, precio) {
+      carrito.push({ nombre, precio });
+      actualizarCarrito();
+    }
+
+    function actualizarCarrito() {
+      const lista = document.getElementById('lista-carrito');
+      const totalSpan = document.getElementById('total');
+      lista.innerHTML = '';
+      let total = 0;
+
+      carrito.forEach(producto => {
+        const li = document.createElement('li');
+        li.textContent = `${producto.nombre} - S/${producto.precio}`;
+        lista.appendChild(li);
+        total += producto.precio;
+      });
+
+      totalSpan.textContent = total;
+    }
+
+    function enviarPorWhatsApp() {
+      if (carrito.length === 0) {
+        alert('Tu carrito está vacío.');
+        return;
+      }
+
+      let mensaje = 'Hola, quiero hacer un pedido de:\n';
+      carrito.forEach(p => {
+        mensaje += `- ${p.nombre} (S/${p.precio})\n`;
+      });
+
+      const total = carrito.reduce((sum, p) => sum + p.precio, 0);
+      mensaje += `\nTotal: S/${total}`;
+
+      const url = `https://wa.me/51932463447?text=${encodeURIComponent(mensaje)}`;
+      window.open(url, '_blank');
+    }
+  </script>
 </body>
 </html>
