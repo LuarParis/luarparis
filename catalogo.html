@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Roboto&display=swap" rel="stylesheet">
   <style>
     body { margin: 0; font-family: 'Roboto', sans-serif; }
+
     header {
       background-image: url('PORTADALUAR.png');
       background-size: cover;
@@ -15,25 +16,119 @@
       text-align: center;
       padding: 100px 20px;
     }
-    nav { background: black; padding: 10px; display: flex; justify-content: center; gap: 20px; }
-    nav a { color: white; text-decoration: none; font-weight: bold; }
-    .catalogo { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; padding: 60px; }
-    .producto { text-align: center; }
-    .producto img { width: 100%; border-radius: 10px; }
-    .producto button { margin-top: 10px; padding: 10px 15px; background: #111; color: white; border: none; border-radius: 5px; cursor: pointer; }
 
-    /* Estilos del carrito */
-    #carrito {
-      padding: 20px;
-      border-top: 2px solid #ccc;
-      background: #f9f9f9;
-      max-width: 600px;
-      margin: auto;
-      margin-bottom: 40px;
+    nav {
+      background: black;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
     }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .catalogo {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 30px;
+      padding: 60px;
+    }
+
+    .producto {
+      text-align: center;
+    }
+
+    .producto img {
+      width: 100%;
+      border-radius: 10px;
+    }
+
+    .cantidad-control {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .cantidad-control button {
+      padding: 5px 10px;
+      font-size: 18px;
+      border: none;
+      border-radius: 4px;
+      background: #111;
+      color: white;
+      cursor: pointer;
+    }
+
+    .cantidad {
+      font-weight: bold;
+      font-size: 16px;
+      width: 30px;
+      text-align: center;
+      display: inline-block;
+    }
+
+    .producto button.agregar {
+      margin-top: 10px;
+      padding: 10px 15px;
+      background: green;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    /* Carrito lateral */
+    #carrito {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 300px;
+      height: 100%;
+      background: #f9f9f9;
+      border-left: 2px solid #ccc;
+      padding: 20px;
+      overflow-y: auto;
+      box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+      z-index: 999;
+      display: none;
+    }
+
+    #carrito h3 {
+      margin-top: 100px;
+      font-size: 20px;
+    }
+
     #carrito ul {
       list-style: none;
       padding: 0;
+    }
+
+    #carrito li {
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    #carrito button {
+      margin-top: 10px;
+      background: green;
+      color: white;
+      border: none;
+      padding: 10px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .quitar {
+      margin-left: 10px;
+      color: red;
+      font-weight: bold;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -52,91 +147,109 @@
 
   <div class="catalogo">
     <div class="producto">
-      <img src="https://images.unsplash.com/photo-1603884706496-fbc8021be93f" alt="Vestido 3">
+      <img src="https://images.unsplash.com/photo-1603884706496-fbc8021be93f" alt="Vestido Celeste">
       <p>Vestido Celeste Brillante - S/490</p>
-      <button onclick="agregarAlCarrito('Vestido Celeste Brillante', 490)">Añadir al carrito</button>
+      <div class="cantidad-control">
+        <button onclick="cambiarCantidad(this, -1)">−</button>
+        <span class="cantidad">1</span>
+        <button onclick="cambiarCantidad(this, 1)">+</button>
+      </div>
+      <button class="agregar" onclick="agregarAlCarrito('Vestido Celeste Brillante', 490, this)">Añadir al carrito</button>
     </div>
+
     <div class="producto">
-      <img src="https://images.unsplash.com/photo-1622560487388-20766b1d7b89" alt="Vestido 4">
+      <img src="https://images.unsplash.com/photo-1622560487388-20766b1d7b89" alt="Vestido Plateado">
       <p>Vestido Noche Plateado - S/580</p>
-      <button onclick="agregarAlCarrito('Vestido Noche Plateado', 580)">Añadir al carrito</button>
+      <div class="cantidad-control">
+        <button onclick="cambiarCantidad(this, -1)">−</button>
+        <span class="cantidad">1</span>
+        <button onclick="cambiarCantidad(this, 1)">+</button>
+      </div>
+      <button class="agregar" onclick="agregarAlCarrito('Vestido Noche Plateado', 580, this)">Añadir al carrito</button>
     </div>
   </div>
 
-  <!-- CARRITO -->
+  <!-- Carrito lateral -->
   <div id="carrito">
-    <h3>🛒 Tu carrito:</h3>
+    <h3>🛒 Tu carrito</h3>
     <ul id="lista-carrito"></ul>
     <p><strong>Total:</strong> S/<span id="total">0</span></p>
-    <button onclick="enviarPorWhatsApp()">Enviar pedido por WhatsApp</button>
+    <button onclick="enviarPorWhatsApp()">Enviar por WhatsApp</button>
   </div>
 
   <script>
-  const carrito = [];
+    const carrito = [];
 
-  function agregarAlCarrito(nombre, precio) {
-    const existente = carrito.find(p => p.nombre === nombre);
-    if (existente) {
-      existente.cantidad += 1;
-    } else {
-      carrito.push({ nombre, precio, cantidad: 1 });
+    function cambiarCantidad(btn, cambio) {
+      const cantidadSpan = btn.parentElement.querySelector('.cantidad');
+      let cantidad = parseInt(cantidadSpan.textContent);
+      cantidad = Math.max(1, cantidad + cambio);
+      cantidadSpan.textContent = cantidad;
     }
-    actualizarCarrito();
-  }
 
-  function actualizarCarrito() {
-    const lista = document.getElementById('lista-carrito');
-    const totalSpan = document.getElementById('total');
-    lista.innerHTML = '';
-    let total = 0;
+    function agregarAlCarrito(nombre, precio, boton) {
+      const cantidad = parseInt(boton.previousElementSibling.querySelector('.cantidad').textContent);
+      const existente = carrito.find(p => p.nombre === nombre);
+      if (existente) {
+        existente.cantidad += cantidad;
+      } else {
+        carrito.push({ nombre, precio, cantidad });
+      }
+      actualizarCarrito();
+    }
 
-    carrito.forEach((producto, index) => {
-      const li = document.createElement('li');
-      li.innerHTML = `
-        ${producto.nombre} - S/${producto.precio} × ${producto.cantidad}
-        <button onclick="cambiarCantidad(${index}, -1)" style="margin-left:10px;">−</button>
-        <button onclick="cambiarCantidad(${index}, 1)">+</button>
-        <button onclick="eliminarProducto(${index})" style="margin-left:10px; background:red; color:white; border:none; padding:2px 6px; border-radius:4px; cursor:pointer;">❌</button>
-      `;
-      lista.appendChild(li);
-      total += producto.precio * producto.cantidad;
-    });
-
-    totalSpan.textContent = total;
-  }
-
-  function cambiarCantidad(index, cambio) {
-    carrito[index].cantidad += cambio;
-    if (carrito[index].cantidad <= 0) {
+    function quitarDelCarrito(index) {
       carrito.splice(index, 1);
-    }
-    actualizarCarrito();
-  }
-
-  function eliminarProducto(index) {
-    carrito.splice(index, 1);
-    actualizarCarrito();
-  }
-
-  function enviarPorWhatsApp() {
-    if (carrito.length === 0) {
-      alert('Tu carrito está vacío.');
-      return;
+      actualizarCarrito();
     }
 
-    let mensaje = 'Hola, quiero hacer un pedido de:\n';
-    carrito.forEach(p => {
-      mensaje += `- ${p.nombre} (S/${p.precio}) x${p.cantidad}\n`;
-    });
+    function actualizarCarrito() {
+      const lista = document.getElementById('lista-carrito');
+      const totalSpan = document.getElementById('total');
+      const carritoDiv = document.getElementById('carrito');
 
-    const total = carrito.reduce((sum, p) => sum + (p.precio * p.cantidad), 0);
-    mensaje += `\nTotal: S/${total}`;
+      lista.innerHTML = '';
+      let total = 0;
 
-    const url = `https://wa.me/51932463447?text=${encodeURIComponent(mensaje)}`;
-    window.open(url, '_blank');
-  }
-</script>
+      if (carrito.length === 0) {
+        carritoDiv.style.display = 'none';
+        return;
+      } else {
+        carritoDiv.style.display = 'block';
+      }
 
+      carrito.forEach((producto, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `${producto.nombre} - S/${producto.precio} × ${producto.cantidad} <span class="quitar" onclick="quitarDelCarrito(${index})">[Quitar]</span>`;
+        lista.appendChild(li);
+        total += producto.precio * producto.cantidad;
+      });
+
+      totalSpan.textContent = total;
+    }
+
+    function enviarPorWhatsApp() {
+      if (carrito.length === 0) {
+        alert('Tu carrito está vacío.');
+        return;
+      }
+
+      let mensaje = 'Hola, quiero hacer un pedido de:\n';
+      carrito.forEach(p => {
+        mensaje += `- ${p.nombre} (S/${p.precio}) x${p.cantidad}\n`;
+      });
+
+      const total = carrito.reduce((sum, p) => sum + (p.precio * p.cantidad), 0);
+      mensaje += `\nTotal: S/${total}`;
+      mensaje += `\n\nGracias por tu preferencia. ¡Regresa pronto!`;
+
+      const url = `https://wa.me/51932463447?text=${encodeURIComponent(mensaje)}`;
+      window.open(url, '_blank');
+
+      // Vaciar carrito después de enviar
+      carrito.length = 0;
+      actualizarCarrito();
+    }
   </script>
 </body>
 </html>
