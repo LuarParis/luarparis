@@ -22,7 +22,24 @@
     .producto { text-align: center; }
     .producto img { width: 100%; border-radius: 10px; }
     .producto .cantidad { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 10px; }
-    .producto button { padding: 10px 15px; background: #111; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    .producto .cantidad button {
+      background: white;
+      color: black;
+      border: 1px solid black;
+      padding: 5px 10px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .producto button.agregar-carrito {
+      padding: 10px 15px;
+      background: #111;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
 
     #carrito-lateral {
       position: fixed;
@@ -76,6 +93,11 @@
       z-index: 9999;
       border: 2px solid #000;
     }
+    .cantidad-texto {
+      font-size: 14px;
+      color: #555;
+      margin-top: 4px;
+    }
   </style>
 </head>
 <body>
@@ -91,34 +113,7 @@
     <a href="contactanos.html">Contáctanos</a>
   </nav>
 
-  <div class="catalogo">
-    <!-- Repite este bloque para cada producto -->
-    <div class="producto">
-      <img src="imagen1.jpg" alt="Vestido 1">
-      <p>Vestido Modelo 1 - S/490</p>
-      <div class="cantidad">
-        <button onclick="cambiarCantidad(this, -1)">-</button>
-        <span>1</span>
-        <button onclick="cambiarCantidad(this, 1)">+</button>
-      </div>
-      <button onclick="agregarAlCarrito('Vestido Modelo 1', 490, this)">Añadir al carrito</button>
-    </div>
-
-    <!-- Puedes copiar y pegar este bloque y cambiar los datos para más productos -->
-    <div class="producto">
-      <img src="imagen2.jpg" alt="Vestido 2">
-      <p>Vestido Modelo 2 - S/520</p>
-      <div class="cantidad">
-        <button onclick="cambiarCantidad(this, -1)">-</button>
-        <span>1</span>
-        <button onclick="cambiarCantidad(this, 1)">+</button>
-      </div>
-      <button onclick="agregarAlCarrito('Vestido Modelo 2', 520, this)">Añadir al carrito</button>
-    </div>
-
-    <!-- Repite hasta tener 10 productos -->
-    <!-- ... -->
-  </div>
+  <div class="catalogo" id="catalogo"></div>
 
   <div id="carrito-lateral">
     <h3>Carrito</h3>
@@ -130,25 +125,60 @@
     </a>
   </div>
 
-  <div id="mensaje-confirmacion">
-    Gracias por tu preferencia. Regresa pronto
-  </div>
+  <div id="mensaje-confirmacion">Gracias por tu preferencia. Regresa pronto</div>
 
   <script>
     const carrito = [];
+    const productos = [
+      { nombre: 'Vestido Modelo 1', precio: 490, imagen: 'imagen1.jpg' },
+      { nombre: 'Vestido Modelo 2', precio: 520, imagen: 'imagen2.jpg' },
+      { nombre: 'Vestido Modelo 3', precio: 550, imagen: 'imagen3.jpg' },
+      { nombre: 'Vestido Modelo 4', precio: 600, imagen: 'imagen4.jpg' },
+      { nombre: 'Vestido Modelo 5', precio: 650, imagen: 'imagen5.jpg' },
+      { nombre: 'Vestido Modelo 6', precio: 700, imagen: 'imagen6.jpg' },
+      { nombre: 'Vestido Modelo 7', precio: 750, imagen: 'imagen7.jpg' },
+      { nombre: 'Vestido Modelo 8', precio: 800, imagen: 'imagen8.jpg' },
+      { nombre: 'Vestido Modelo 9', precio: 850, imagen: 'imagen9.jpg' },
+      { nombre: 'Vestido Modelo 10', precio: 900, imagen: 'imagen10.jpg' }
+    ];
+
+    const catalogo = document.getElementById('catalogo');
+    productos.forEach(p => {
+      const div = document.createElement('div');
+      div.className = 'producto';
+      div.innerHTML = `
+        <img src="${p.imagen}" alt="${p.nombre}">
+        <p>${p.nombre} - S/${p.precio}</p>
+        <div class="cantidad">
+          <button onclick="cambiarCantidad(this, -1)">-</button>
+          <span>1</span>
+          <button onclick="cambiarCantidad(this, 1)">+</button>
+        </div>
+        <div class="cantidad-texto">Cantidad</div>
+        <button class="agregar-carrito" onclick="agregarAlCarrito('${p.nombre}', ${p.precio}, this)">Añadir al carrito</button>
+      `;
+      catalogo.appendChild(div);
+    });
 
     function cambiarCantidad(boton, delta) {
       const span = boton.parentElement.querySelector('span');
       let cantidad = parseInt(span.textContent);
       cantidad = Math.max(1, cantidad + delta);
       span.textContent = cantidad;
+
+      const nombre = boton.closest('.producto').querySelector('p').textContent.split(' - ')[0];
+      const item = carrito.find(p => p.nombre === nombre);
+      if (item) {
+        item.cantidad = cantidad;
+        actualizarCarrito();
+      }
     }
 
     function agregarAlCarrito(nombre, precio, boton) {
-      const cantidad = parseInt(boton.previousElementSibling.querySelector('span').textContent);
+      const cantidad = parseInt(boton.previousElementSibling.previousElementSibling.querySelector('span').textContent);
       const index = carrito.findIndex(p => p.nombre === nombre);
       if (index !== -1) {
-        carrito[index].cantidad += cantidad;
+        carrito[index].cantidad = cantidad;
       } else {
         carrito.push({ nombre, precio, cantidad });
       }
@@ -162,7 +192,7 @@
 
       carrito.forEach(p => {
         const item = document.createElement('li');
-        item.textContent = `${p.nombre} x${p.cantidad} - S/${(p.precio * p.cantidad).toFixed(2)}`;
+        item.innerHTML = `<strong>${p.nombre}</strong><br><span>Cantidad: ${p.cantidad}</span><br>Subtotal: S/${(p.precio * p.cantidad).toFixed(2)}`;
         lista.appendChild(item);
         total += p.precio * p.cantidad;
       });
