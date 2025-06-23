@@ -72,46 +72,71 @@
   </div>
 
   <script>
-    const carrito = [];
+  const carrito = [];
 
-    function agregarAlCarrito(nombre, precio) {
-      carrito.push({ nombre, precio });
-      actualizarCarrito();
+  function agregarAlCarrito(nombre, precio) {
+    const existente = carrito.find(p => p.nombre === nombre);
+    if (existente) {
+      existente.cantidad += 1;
+    } else {
+      carrito.push({ nombre, precio, cantidad: 1 });
+    }
+    actualizarCarrito();
+  }
+
+  function actualizarCarrito() {
+    const lista = document.getElementById('lista-carrito');
+    const totalSpan = document.getElementById('total');
+    lista.innerHTML = '';
+    let total = 0;
+
+    carrito.forEach((producto, index) => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        ${producto.nombre} - S/${producto.precio} × ${producto.cantidad}
+        <button onclick="cambiarCantidad(${index}, -1)" style="margin-left:10px;">−</button>
+        <button onclick="cambiarCantidad(${index}, 1)">+</button>
+        <button onclick="eliminarProducto(${index})" style="margin-left:10px; background:red; color:white; border:none; padding:2px 6px; border-radius:4px; cursor:pointer;">❌</button>
+      `;
+      lista.appendChild(li);
+      total += producto.precio * producto.cantidad;
+    });
+
+    totalSpan.textContent = total;
+  }
+
+  function cambiarCantidad(index, cambio) {
+    carrito[index].cantidad += cambio;
+    if (carrito[index].cantidad <= 0) {
+      carrito.splice(index, 1);
+    }
+    actualizarCarrito();
+  }
+
+  function eliminarProducto(index) {
+    carrito.splice(index, 1);
+    actualizarCarrito();
+  }
+
+  function enviarPorWhatsApp() {
+    if (carrito.length === 0) {
+      alert('Tu carrito está vacío.');
+      return;
     }
 
-    function actualizarCarrito() {
-      const lista = document.getElementById('lista-carrito');
-      const totalSpan = document.getElementById('total');
-      lista.innerHTML = '';
-      let total = 0;
+    let mensaje = 'Hola, quiero hacer un pedido de:\n';
+    carrito.forEach(p => {
+      mensaje += `- ${p.nombre} (S/${p.precio}) x${p.cantidad}\n`;
+    });
 
-      carrito.forEach(producto => {
-        const li = document.createElement('li');
-        li.textContent = `${producto.nombre} - S/${producto.precio}`;
-        lista.appendChild(li);
-        total += producto.precio;
-      });
+    const total = carrito.reduce((sum, p) => sum + (p.precio * p.cantidad), 0);
+    mensaje += `\nTotal: S/${total}`;
 
-      totalSpan.textContent = total;
-    }
+    const url = `https://wa.me/51932463447?text=${encodeURIComponent(mensaje)}`;
+    window.open(url, '_blank');
+  }
+</script>
 
-    function enviarPorWhatsApp() {
-      if (carrito.length === 0) {
-        alert('Tu carrito está vacío.');
-        return;
-      }
-
-      let mensaje = 'Hola, quiero hacer un pedido de:\n';
-      carrito.forEach(p => {
-        mensaje += `- ${p.nombre} (S/${p.precio})\n`;
-      });
-
-      const total = carrito.reduce((sum, p) => sum + p.precio, 0);
-      mensaje += `\nTotal: S/${total}`;
-
-      const url = `https://wa.me/51932463447?text=${encodeURIComponent(mensaje)}`;
-      window.open(url, '_blank');
-    }
   </script>
 </body>
 </html>
