@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Catálogo | LUAR PARIS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Roboto&display=swap" rel="stylesheet">
+  <style>
+    body { margin: 0; font-family: 'Roboto', sans-serif; }
+    header {
+      background-image: url('PORTADALUAR.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
+  text-align: center;
+  padding: 100px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 60px;
+  margin: 0;
+}
+
+header p {
+  font-size: 20px;
+  margin: 10px 0 0;
+}
+    nav { background: black; padding: 10px; display: flex; justify-content: center; gap: 20px; }
+    nav a { color: white; text-decoration: none; font-weight: bold; }
+
+    .catalogo {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 30px;
+      padding: 60px;
+    }
+    .producto { text-align: center; }
+    .producto img { width: 100%; border-radius: 10px; }
+    .producto .cantidad {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .producto .cantidad button {
+      background: white;
+      color: black;
+      border: 1px solid black;
+      padding: 5px 10px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .producto button.agregar-carrito {
+      padding: 10px 15px;
+      background: #111;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    #carrito-lateral {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 300px;
+      height: 100%;
+      background: #f9f9f9;
+      border-left: 2px solid #ccc;
+      box-shadow: -4px 0 10px rgba(0,0,0,0.1);
+      padding: 20px;
+      overflow-y: auto;
+      transform: translateX(100%);
+      transition: transform 0.3s ease-in-out;
+      z-index: 1000;
+    }
+
+    #carrito-lateral.abierto {
+      transform: translateX(0);
+    }
+
+    #carrito-lateral h3 {
+      text-align: center;
+      margin-top: 0;
+    }
+
+    #pestana-carrito {
+      position: fixed;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+      background: #111;
+      color: white;
+      padding: 12px;
+      cursor: pointer;
+      font-size: 14px;
+      writing-mode: vertical-rl;
+      text-align: center;
+      border-radius: 8px 0 0 8px;
+      z-index: 1001;
+    }
+
+    #boton-whatsapp {
+      background-color: #25D366;
+      color: white;
+      font-weight: bold;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+      text-decoration: none;
+      margin-top: 10px;
+    }
+    #boton-whatsapp:hover { background-color: #1ebe5d; }
+    #boton-whatsapp img { width: 20px; height: 20px; }
+
+    #mensaje-confirmacion {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      color: #111;
+      padding: 40px 60px;
+      border-radius: 20px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      text-align: center;
+      z-index: 9999;
+      border: 2px solid #000;
+    }
+
+    .cantidad-texto {
+      font-size: 14px;
+      color: #555;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>LUAR PARIS</h1>
+    <p>"Estilo que no se olvida"</p>
+  </header>
+
+  <nav>
+    <a href="index.html">Inicio</a>
+    <a href="diseñadora.html">Diseñadora</a>
+    <a href="catalogo.html">Catálogo</a>
+    <a href="contactanos.html">Contáctanos</a>
+  </nav>
+
+  <div class="catalogo" id="catalogo"></div>
+
+  <div id="pestana-carrito" onclick="alternarCarrito()">🛒 Carrito</div>
+
+  <div id="carrito-lateral">
+    <h3>Carrito</h3>
+    <ul id="lista-carrito"></ul>
+    <p><strong>Total:</strong> S/<span id="total">0</span></p>
+    <a id="boton-whatsapp" href="#" onclick="enviarPedidoPorWhatsApp()">
+      <img src="https://cdn-icons-png.flaticon.com/512/124/124034.png" alt="WhatsApp">
+      Enviar por WhatsApp
+    </a>
+  </div>
+
+  <div id="mensaje-confirmacion">Gracias por tu preferencia. Regresa pronto</div>
+
+  <script>
+    const carrito = [];
+    const productos = [
+      { nombre: 'Vestido Modelo 1', precio: 490, imagen: 'imagen1.jpg' },
+      { nombre: 'Vestido Modelo 2', precio: 520, imagen: 'imagen2.jpg' },
+      { nombre: 'Vestido Modelo 3', precio: 550, imagen: 'imagen3.jpg' },
+      { nombre: 'Vestido Modelo 4', precio: 600, imagen: 'imagen4.jpg' },
+      { nombre: 'Vestido Modelo 5', precio: 650, imagen: 'imagen5.jpg' },
+      { nombre: 'Vestido Modelo 6', precio: 700, imagen: 'imagen6.jpg' },
+      { nombre: 'Vestido Modelo 7', precio: 750, imagen: 'imagen7.jpg' },
+      { nombre: 'Vestido Modelo 8', precio: 800, imagen: 'imagen8.jpg' },
+      { nombre: 'Vestido Modelo 9', precio: 850, imagen: 'imagen9.jpg' },
+      { nombre: 'Vestido Modelo 10', precio: 900, imagen: 'imagen10.jpg' }
+    ];
+
+    const catalogo = document.getElementById('catalogo');
+    productos.forEach(p => {
+      const div = document.createElement('div');
+      div.className = 'producto';
+      div.innerHTML = `
+        <img src="${p.imagen}" alt="${p.nombre}">
+        <p>${p.nombre} - S/${p.precio}</p>
+        <div class="cantidad">
+          <button onclick="cambiarCantidad(this, -1)">-</button>
+          <span>0</span>
+          <button onclick="cambiarCantidad(this, 1)">+</button>
+        </div>
+        <div class="cantidad-texto">Cantidad</div>
+        <button class="agregar-carrito" onclick="agregarAlCarrito('${p.nombre}', ${p.precio}, this)">Añadir al carrito</button>
+      `;
+      catalogo.appendChild(div);
+    });
+
+    function cambiarCantidad(boton, delta) {
+      const span = boton.parentElement.querySelector('span');
+      let cantidad = parseInt(span.textContent);
+      cantidad = Math.max(0, cantidad + delta);
+      span.textContent = cantidad;
+
+      const nombre = boton.closest('.producto').querySelector('p').textContent.split(' - ')[0];
+      const index = carrito.findIndex(p => p.nombre === nombre);
+
+      if (index !== -1) {
+        if (cantidad === 0) {
+          carrito.splice(index, 1);
+        } else {
+          carrito[index].cantidad = cantidad;
+        }
+        actualizarCarrito();
+      }
+    }
+
+    function agregarAlCarrito(nombre, precio, boton) {
+      const cantidad = parseInt(boton.previousElementSibling.previousElementSibling.querySelector('span').textContent);
+      const index = carrito.findIndex(p => p.nombre === nombre);
+
+      if (cantidad === 0) {
+        if (index !== -1) {
+          carrito.splice(index, 1);
+          actualizarCarrito();
+        }
+        return;
+      }
+
+      if (index !== -1) {
+        carrito[index].cantidad = cantidad;
+      } else {
+        carrito.push({ nombre, precio, cantidad });
+      }
+      actualizarCarrito();
+    }
+
+    function quitarDelCarrito(nombre) {
+      const index = carrito.findIndex(p => p.nombre === nombre);
+      if (index !== -1) {
+        carrito.splice(index, 1);
+        actualizarCarrito();
+      }
+    }
+
+    function actualizarCarrito() {
+      const lista = document.getElementById('lista-carrito');
+      lista.innerHTML = '';
+      let total = 0;
+
+      carrito.forEach(p => {
+        const item = document.createElement('li');
+        item.innerHTML = `
+          <strong>${p.nombre}</strong><br>
+          <span>Cantidad: ${p.cantidad}</span><br>
+          Subtotal: S/${(p.precio * p.cantidad).toFixed(2)}<br>
+          <button onclick="quitarDelCarrito('${p.nombre}')" style="margin-top:5px;background:#111;color:white;border:none;padding:6px 12px;border-radius:5px;cursor:pointer;">Quitar del carrito</button>
+        `;
+        lista.appendChild(item);
+        total += p.precio * p.cantidad;
+      });
+
+      document.getElementById('total').textContent = total.toFixed(2);
+    }
+
+    function alternarCarrito() {
+      const carrito = document.getElementById('carrito-lateral');
+      carrito.classList.toggle('abierto');
+    }
+
+    function mostrarMensaje() {
+      const mensaje = document.getElementById("mensaje-confirmacion");
+      mensaje.style.display = "block";
+      setTimeout(() => {
+        mensaje.style.display = "none";
+      }, 2000);
+    }
+
+    function enviarPedidoPorWhatsApp() {
+      if (carrito.length === 0) {
+        alert('Tu carrito está vacío.');
+        return;
+      }
+
+      mostrarMensaje();
+
+      setTimeout(() => {
+        const numero = '51932463447';
+        let mensaje = 'Hola, quiero hacer un pedido de:\n';
+
+        carrito.forEach(p => {
+          mensaje += `- ${p.nombre} x${p.cantidad} (S/${p.precio})\n`;
+        });
+
+        const total = carrito.reduce((sum, p) => sum + (p.precio * p.cantidad), 0);
+        mensaje += `\nTotal: S/${total.toFixed(2)}`;
+
+        window.location.href = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
+
+        carrito.length = 0;
+        actualizarCarrito();
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
