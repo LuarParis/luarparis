@@ -190,7 +190,7 @@
         <p>${p.nombre} - S/${p.precio}</p>
         <div class="cantidad">
           <button onclick="cambiarCantidad(this, -1)">-</button>
-          <span>1</span>
+          <span>0</span>
           <button onclick="cambiarCantidad(this, 1)">+</button>
         </div>
         <div class="cantidad-texto">Cantidad</div>
@@ -202,13 +202,18 @@
     function cambiarCantidad(boton, delta) {
       const span = boton.parentElement.querySelector('span');
       let cantidad = parseInt(span.textContent);
-      cantidad = Math.max(1, cantidad + delta);
+      cantidad = Math.max(0, cantidad + delta);
       span.textContent = cantidad;
 
       const nombre = boton.closest('.producto').querySelector('p').textContent.split(' - ')[0];
-      const item = carrito.find(p => p.nombre === nombre);
-      if (item) {
-        item.cantidad = cantidad;
+      const index = carrito.findIndex(p => p.nombre === nombre);
+
+      if (index !== -1) {
+        if (cantidad === 0) {
+          carrito.splice(index, 1);
+        } else {
+          carrito[index].cantidad = cantidad;
+        }
         actualizarCarrito();
       }
     }
@@ -216,12 +221,29 @@
     function agregarAlCarrito(nombre, precio, boton) {
       const cantidad = parseInt(boton.previousElementSibling.previousElementSibling.querySelector('span').textContent);
       const index = carrito.findIndex(p => p.nombre === nombre);
+
+      if (cantidad === 0) {
+        if (index !== -1) {
+          carrito.splice(index, 1);
+          actualizarCarrito();
+        }
+        return;
+      }
+
       if (index !== -1) {
         carrito[index].cantidad = cantidad;
       } else {
         carrito.push({ nombre, precio, cantidad });
       }
       actualizarCarrito();
+    }
+
+    function quitarDelCarrito(nombre) {
+      const index = carrito.findIndex(p => p.nombre === nombre);
+      if (index !== -1) {
+        carrito.splice(index, 1);
+        actualizarCarrito();
+      }
     }
 
     function actualizarCarrito() {
@@ -231,7 +253,12 @@
 
       carrito.forEach(p => {
         const item = document.createElement('li');
-        item.innerHTML = `<strong>${p.nombre}</strong><br><span>Cantidad: ${p.cantidad}</span><br>Subtotal: S/${(p.precio * p.cantidad).toFixed(2)}`;
+        item.innerHTML = `
+          <strong>${p.nombre}</strong><br>
+          <span>Cantidad: ${p.cantidad}</span><br>
+          Subtotal: S/${(p.precio * p.cantidad).toFixed(2)}<br>
+          <button onclick="quitarDelCarrito('${p.nombre}')" style="margin-top:5px;background:#111;color:white;border:none;padding:6px 12px;border-radius:5px;cursor:pointer;">Quitar del carrito</button>
+        `;
         lista.appendChild(item);
         total += p.precio * p.cantidad;
       });
