@@ -52,10 +52,30 @@
       box-shadow: -4px 0 10px rgba(0,0,0,0.1);
       padding: 20px;
       overflow-y: auto;
-      display: none;
+      transform: translateX(100%);
+      transition: transform 0.3s ease-in-out;
       z-index: 1000;
     }
+
+    #carrito-lateral.abierto {
+      transform: translateX(0);
+    }
+
     #carrito-lateral h3 { text-align: center; margin-top: 0; }
+
+    #abrir-carrito {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: black;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      z-index: 1100;
+      font-size: 16px;
+    }
 
     #boton-whatsapp {
       background-color: #25D366;
@@ -93,6 +113,7 @@
       z-index: 9999;
       border: 2px solid #000;
     }
+
     .cantidad-texto {
       font-size: 14px;
       color: #555;
@@ -115,7 +136,10 @@
 
   <div class="catalogo" id="catalogo"></div>
 
+  <button id="abrir-carrito" onclick="abrirCarrito()">🛒 Ver Carrito</button>
+
   <div id="carrito-lateral">
+    <span style="float:right; cursor:pointer; font-size: 20px;" onclick="cerrarCarrito()">✖</span>
     <h3>Carrito</h3>
     <ul id="lista-carrito"></ul>
     <p><strong>Total:</strong> S/<span id="total">0</span></p>
@@ -198,7 +222,19 @@
       });
 
       document.getElementById('total').textContent = total.toFixed(2);
-      document.getElementById('carrito-lateral').style.display = carrito.length > 0 ? 'block' : 'none';
+      if (carrito.length > 0) {
+        document.getElementById('carrito-lateral').classList.add('abierto');
+      } else {
+        document.getElementById('carrito-lateral').classList.remove('abierto');
+      }
+    }
+
+    function abrirCarrito() {
+      document.getElementById('carrito-lateral').classList.add('abierto');
+    }
+
+    function cerrarCarrito() {
+      document.getElementById('carrito-lateral').classList.remove('abierto');
     }
 
     function mostrarMensaje() {
